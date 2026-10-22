@@ -1,0 +1,90 @@
+﻿<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f3ed">
+  <title>¿Me ayudas a validar una idea?</title>
+  <style>
+    :root { color-scheme: light; --ink:#20251f; --muted:#626a60; --green:#235c46; --paper:#fffefa; --line:#d9ded4; }
+    * { box-sizing:border-box; }
+    body { margin:0; padding:24px 14px 40px; background:#f6f3ed; color:var(--ink); font:16px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif; }
+    main { max-width:680px; margin:0 auto; }
+    .sheet { background:var(--paper); border:1px solid var(--line); border-radius:18px; padding:clamp(22px,5vw,42px); box-shadow:0 8px 30px #2433260c; }
+    .eyebrow { color:var(--green); font-size:.78rem; font-weight:750; letter-spacing:.09em; text-transform:uppercase; }
+    h1 { margin:.35rem 0 1.25rem; font-size:clamp(1.8rem,6vw,2.5rem); line-height:1.12; letter-spacing:-.035em; }
+    p { margin:.85rem 0; }
+    .intro { color:#343b34; font-size:1.04rem; }
+    h2 { margin:1.8rem 0 .7rem; font-size:1.15rem; }
+    .question { margin:1.15rem 0; }
+    label { display:block; font-weight:650; margin-bottom:.4rem; }
+    textarea { width:100%; resize:vertical; border:1px solid #bcc6b9; border-radius:10px; background:white; color:var(--ink); padding:12px 13px; font:inherit; }
+    textarea:focus, input:focus { outline:3px solid #b8d4c2; border-color:var(--green); }
+    .choices { display:flex; flex-wrap:wrap; gap:9px; margin-top:9px; }
+    .choice { display:flex; align-items:center; gap:7px; padding:8px 11px; border:1px solid var(--line); border-radius:999px; background:#fff; font-size:.94rem; }
+    .choice input { accent-color:var(--green); }
+    .actions { margin-top:24px; }
+    button { border:0; border-radius:10px; padding:12px 16px; background:var(--green); color:white; font:inherit; font-weight:700; cursor:pointer; }
+    button:hover { filter:brightness(.95); }
+    #status { min-height:1.5em; margin-top:10px; color:var(--green); font-size:.92rem; }
+    footer { margin:16px 6px 0; text-align:center; color:var(--muted); font-size:.82rem; }
+    @media print { body { padding:0; background:white; } .sheet { border:0; box-shadow:none; } .actions, #status, footer { display:none; } textarea { border-color:#bbb; } }
+  </style>
+</head>
+<body>
+  <main>
+    <article class="sheet">
+      <h1>¿Me ayudas a validar una idea?</h1>
+      <p class="intro">Estoy explorando crear recursos prácticos para músicos de banda que muchas veces aprenden <strong>de oído</strong> y quieren entender mejor la música que tocan, estudiar con más seguridad y disfrutar aún más de los ensayos.</p>
+      <p>Antes de preparar nada, quiero saber si esto responde a una necesidad real. Como tienes experiencia en este mundo, me ayudaría mucho conocer tu opinión.</p>
+      <form id="answers" action="https://script.google.com/macros/s/AKfycbwC2rnA7RKnRZrmuSAxbclYzErUtjl6DRS4dltIvPNdZSWp71KQ_L_cvdhDTEtO_ZOF/exec" method="post" target="submit-frame">
+        <h2>Me gustaría preguntarte</h2>
+        <section class="question">
+          <label>1. ¿Alguna vez te ha faltado una explicación o ayuda práctica para tocar, estudiar o entender mejor una pieza?</label>
+          <div class="choices">
+            <label class="choice"><input type="radio" name="pregunta1" value="Sí, alguna vez" required> Sí, alguna vez</label>
+            <label class="choice"><input type="radio" name="pregunta1" value="Sí, a menudo"> Sí, a menudo</label>
+            <label class="choice"><input type="radio" name="pregunta1" value="No, nunca"> No, nunca</label>
+          </div>
+        </section>
+        <section class="question">
+          <label for="pregunta2">2. ¿Qué te ha resultado más difícil?</label>
+          <textarea id="pregunta2" name="pregunta2" rows="5" style="width: 100%; resize: vertical;" placeholder="Puedes escribir una frase o dejarlo en blanco"></textarea>
+        </section>
+        <section class="question">
+          <label for="pregunta3">3. ¿Intentaste resolverlo tú solo/a o buscaste algún recurso? ¿Cómo?</label>
+          <textarea id="pregunta3" name="pregunta3" rows="5" style="width: 100%; resize: vertical;" placeholder="Por ejemplo, preguntando a alguien, buscando vídeos o practicando por tu cuenta"></textarea>
+        </section>
+        <section class="question">
+          <label for="pregunta4">4. Si existiera un recurso sencillo para resolver el problema, ¿lo usarías? ¿Qué formato te serviría más?</label>
+          <textarea id="pregunta4" name="pregunta4" rows="5" style="width: 100%; resize: vertical;" placeholder="Por ejemplo, vídeos, audios, ejercicios o una guía"></textarea>
+        </section>
+        <p>No hay respuestas correctas. Mi interés es escuchar experiencias reales antes de decidir si merece la pena desarrollar la idea.</p>
+        <p><strong>¿Te animas a charlar un rato o a responderme por aquí? ¡Gracias por ayudarme!</strong></p>
+        <div class="actions"><button type="submit">Enviar respuestas</button></div>
+        <p id="status" role="status" aria-live="polite"></p>
+      </form>
+      <iframe name="submit-frame" title="Envío del formulario" hidden></iframe>
+    </article>
+    <footer>Las respuestas se guardarán en una hoja de Google Sheets. No se pide nombre ni correo.</footer>
+  </main>
+  <script>
+    const form = document.getElementById('answers');
+    const status = document.getElementById('status');
+    const frame = document.querySelector('iframe[name="submit-frame"]');
+    let submitted = false;
+    form.addEventListener('submit', () => {
+      submitted = true;
+      status.textContent = 'Enviando…';
+    });
+    frame.addEventListener('load', () => {
+      if (submitted) {
+        status.textContent = 'Respuesta enviada. ¡Gracias!';
+        form.reset();
+        submitted = false;
+      }
+    });
+  </script>
+</body>
+</html>
+
